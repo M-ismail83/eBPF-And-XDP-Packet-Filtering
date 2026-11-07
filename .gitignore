@@ -55,3 +55,6 @@ dkms.conf
 *.dwo
 
 scratch/
+
+*.skel.h
+xdp_count
