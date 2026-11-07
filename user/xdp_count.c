@@ -16,12 +16,12 @@ static volatile sig_atomic_t running = 1;
 
 void handle_signal(int sig)
 {
+    (void)sig; // Unused parameter
     running = 0;
 }
 
 int main(int argc, char** argv)
 {
-    (void)sigaction(SIGINT, &(struct sigaction){ .sa_handler = handle_signal }, NULL);
     if(argc != 2) {
         fprintf(stderr, "Usage: %s <interface>\n", argv[0]);
         return EXIT_FAILURE;
