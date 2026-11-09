@@ -1,0 +1,32 @@
+services:
+  victim:
+    image: nginx:alpine
+    container_name: victim
+    privileged: false
+    networks:
+      - lab
+
+  loader:
+    depends_on: [victim]
+    build: .
+    container_name: loader
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_ADMIN
+      - BPF
+    network_mode: "service:victim"
+    
+    read_only: true
+
+  attacker:
+    image: nicolaka/netshoot
+    tty: true
+    container_name: attacker
+    networks:
+      - lab
+
+
+networks:
+  lab:
+    driver: bridge

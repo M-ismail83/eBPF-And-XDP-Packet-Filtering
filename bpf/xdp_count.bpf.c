@@ -1,8 +1,12 @@
-#include <linux/bpf.h>
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmissing-declarations"
+#include "vmlinux.h"
+#pragma clang diagnostic pop
+
 #include <bpf/bpf_helpers.h>
-#include <linux/if_ether.h>
-#include <linux/ip.h>
-#include <linux/in.h>
+#include <bpf/bpf_endian.h>
+
+#define ETH_P_IP 0x0800
 
 struct {
     __uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
@@ -21,7 +25,7 @@ int my_prog(struct xdp_md* ctx)
 
     __u16 eth_type = eth->h_proto;
 
-    if (eth_type == __constant_htons(ETH_P_IP)) {
+    if (eth_type == bpf_htons(ETH_P_IP)) {
         struct iphdr* ip = (struct iphdr*)(eth + 1);
 
         if ((void*)(ip + 1) > (void*)(long)ctx->data_end)

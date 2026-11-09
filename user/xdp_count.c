@@ -10,7 +10,7 @@
 
 #include <net/if.h>
 
-#include "xdp_count.skel.h"
+#include "xdp_count.skel.h"   
 
 static volatile sig_atomic_t running = 1;
 
@@ -22,6 +22,7 @@ void handle_signal(int sig)
 
 int main(int argc, char** argv)
 {
+    setvbuf(stdout, NULL, _IONBF, 0); // Disable buffering for stdout
     if(argc != 2) {
         fprintf(stderr, "Usage: %s <interface>\n", argv[0]);
         return EXIT_FAILURE;
@@ -74,6 +75,7 @@ int main(int argc, char** argv)
     }
 
     signal(SIGINT, handle_signal);
+    signal(SIGTERM, handle_signal);
     while(running)
     {
         __u64 total = 0;
